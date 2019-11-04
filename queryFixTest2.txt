@@ -1,0 +1,38 @@
+Public Class Form1
+
+    Private Sub Assembly_Scan_Table1BindingNavigatorSaveItem_Click(sender As Object, e As EventArgs) Handles Assembly_Scan_Table1BindingNavigatorSaveItem.Click
+        Me.Validate()
+        Me.Assembly_Scan_Table1BindingSource.EndEdit()
+        Me.TableAdapterManager.UpdateAll(Me.ShopPAK_DataDataSet)
+
+    End Sub
+
+    Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        'TODO: This line of code loads data into the 'ShopPAK_DataDataSet.Assembly_Scan_Table1' table. You can move, or remove it, as needed.
+        Me.Assembly_Scan_Table1TableAdapter.Fill(Me.ShopPAK_DataDataSet.Assembly_Scan_Table1)
+
+        Try
+            For i As Integer = 0 To Assembly_Scan_Table1DataGridView.RowCount - 2 Step 1
+                'IIf([Trims]  LIKE '%[^0-9]%', CLng(Trims), 0) AS ProductNo 
+                If IsNumeric(Me.Assembly_Scan_Table1DataGridView.Item(4, i).Value) = True Then
+                    Dim prodNo As Long = Assembly_Scan_Table1DataGridView.Item(4, i).Value
+                    Assembly_Scan_Table1DataGridView.Item(5, i).Value = prodNo
+
+                Else
+                    Assembly_Scan_Table1DataGridView.Item(5, i).Value = 0
+                End If
+
+                'IIf('[ProductNo]<1', 0, IIf('[ProductNo]>0', ProductNo)) AS Scanned_Product
+                If Assembly_Scan_Table1DataGridView.Item(5, i).Value < 1 Then
+                    Assembly_Scan_Table1DataGridView.Item(6, i).Value = 0
+
+                ElseIf Assembly_Scan_Table1DataGridView.Item(5, i).Value > 0 Then
+                    Assembly_Scan_Table1DataGridView.Item(6, i).Value = Assembly_Scan_Table1DataGridView.Item(5, i).Value
+                End If
+            Next
+
+        Catch ex As Exception
+            MsgBox("Error")
+        End Try
+    End Sub
+End Class

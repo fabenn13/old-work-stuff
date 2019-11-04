@@ -1,0 +1,38 @@
+'Forrest Bennett
+Public Class Form1
+    Public jobNo As String
+    Public rowNum As Integer
+
+    Private Sub btnOkay_Click(sender As Object, e As EventArgs) Handles btnOkay.Click
+        Try
+            Dim placeholder As Integer = 12345
+            jobNo = txtJob.Text
+            Form2.DataTable1BindingSource.Filter = "JobId = '" & jobNo & "'"
+            Form2.Show()
+            rowNum = Form2.DataTable1DataGridView.Rows.Count - 1
+            For i As Integer = 0 To rowNum Step 1
+                If IsDBNull(Form2.DataTable1DataGridView.Item(2, i).Value) = True Then
+                    Form2.DataTable1DataGridView.Item(2, i).Value = placeholder
+                    Form2.DataTable1DataGridView.Item(5, i).Value = 0
+                Else
+                    'CLng(Left([RefNo],Len([RefNo])+3))) Gets the leftmost values of [RefNo]+3 length
+                    Dim rmNo As Long =
+                        Val(Microsoft.VisualBasic.Left(Form2.DataTable1DataGridView.Item(2, i).Value, Len(Form2.DataTable1DataGridView.Item(2, i).Value + 3)))
+                    Form2.DataTable1DataGridView.Item(5, i).Value = rmNo
+                End If
+                If Form2.DataTable1DataGridView.Item(5, i).Value = 0 Then
+                    Form2.DataTable1DataGridView.Item(6, i).Value = "Hardware"
+                Else
+                    Form2.DataTable1DataGridView.Item(6, i).Value = Form2.DataTable1DataGridView.Item(5, i).Value
+                End If
+                If Form2.DataTable1DataGridView.Item(5, i).Value = 0 Then
+                    Form2.DataTable1DataGridView.Item(7, i).Value = "Misc"
+                Else
+                    Form2.DataTable1DataGridView.Item(7, i).Value = Form2.DataTable1DataGridView.Item(2, i).Value
+                End If
+            Next
+        Catch ex As Exception
+            MessageBox.Show("Invalid Input", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+    End Sub
+End Class
